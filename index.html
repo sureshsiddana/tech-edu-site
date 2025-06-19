@@ -41,7 +41,6 @@
               <span id="darkModeIcon">🌙</span>
               <span class="dark-toggle-label">Dark Mode</span>
             </button>
-            <a href="pages/contact-us.html" class="enhanced-dark-toggle" style="margin-left:0.7em;font-size:1em;background:#fff;color:#2f6fce;border:1.5px solid #b3d1f7;">Contact Us</a>
         </div>
     </nav>
     <div class="sidebar-hover-hotspot"></div>
@@ -94,5 +93,268 @@
     <script src="main.js"></script>
     <!-- Material Icons for search -->
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <!-- Floating WhatsApp and Contact Us icons at right bottom -->
+    <div class="floating-contact-box floating-contact-right">
+      <a href="https://wa.me/1234567890" target="_blank" class="floating-contact-link whatsapp bounce-icon" title="Chat on WhatsApp" aria-label="WhatsApp">
+        <!-- Rich WhatsApp SVG Icon -->
+        <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="16" cy="16" r="16" fill="#25D366"/>
+          <path d="M23.5 19.5c-.3-.2-1.7-.8-2-1s-.5-.2-.7.1c-.2.3-.8 1-.9 1.1-.2.2-.3.2-.6.1-.3-.2-1.2-.4-2.3-1.3-.8-.7-1.4-1.6-1.6-1.9-.2-.3 0-.4.1-.6.1-.1.2-.2.3-.4.1-.1.1-.2.2-.3.1-.1.1-.2.2-.3.1-.2.1-.3 0-.5-.1-.2-.7-1.7-1-2.3-.2-.5-.4-.4-.6-.4h-.5c-.2 0-.4 0-.6.2-.2.2-.8.8-.8 2 0 1.2.8 2.4 1.1 2.8.3.4 2.1 3.2 5.1 4.1.7.2 1.2.3 1.6.2.5-.1 1.5-.6 1.7-1.2.2-.6.2-1.1.1-1.2z" fill="#fff"/>
+          <circle cx="16" cy="16" r="15" stroke="#fff" stroke-width="1.5" fill="none"/>
+        </svg>
+      </a>
+      <a href="mailto:info@navetrix.com" class="floating-contact-link contactus bounce-icon" title="Contact Us" aria-label="Contact Us">
+        <!-- Rich Contact Us SVG Icon -->
+        <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="16" cy="16" r="16" fill="#2f6fce"/>
+          <path d="M10 22v-1a4 4 0 014-4h4a4 4 0 014 4v1" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          <circle cx="16" cy="14" r="3" stroke="#fff" stroke-width="2"/>
+          <ellipse cx="16" cy="16" rx="14" ry="14" stroke="#fff" stroke-width="1.5" fill="none"/>
+        </svg>
+      </a>
+    </div>
+    <!-- Floating AI Chat icon at left bottom -->
+    <div class="floating-contact-box floating-contact-left">
+      <a href="#" id="aiChatBtn" class="floating-contact-link aichat bounce-icon" title="AI Chat" aria-label="AI Chat">
+        <!-- Rich AI Chat SVG Icon -->
+        <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="16" cy="16" r="16" fill="#7c3aed"/>
+          <path d="M10 22v-1a4 4 0 014-4h4a4 4 0 014 4v1" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          <ellipse cx="16" cy="14" rx="3" ry="3" fill="#fff"/>
+          <ellipse cx="16" cy="14" rx="1.2" ry="1.2" fill="#7c3aed"/>
+          <path d="M12 12c0-2.2 2-4 4-4s4 1.8 4 4" stroke="#fff" stroke-width="1.5" stroke-linecap="round"/>
+        </svg>
+      </a>
+    </div>
+    <!-- AI Chat Modal Form -->
+    <div id="aiChatModal" class="ai-chat-modal" style="display:none;">
+      <div class="ai-chat-modal-bg" id="aiChatModalBg"></div>
+      <div class="ai-chat-modal-content">
+        <div class="ai-chat-modal-header">
+          <span class="ai-chat-modal-icon">
+            <svg width="38" height="38" viewBox="0 0 38 38" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="19" cy="19" r="19" fill="#7c3aed"/>
+              <ellipse cx="19" cy="16" rx="4" ry="4" fill="#fff"/>
+              <ellipse cx="19" cy="16" rx="1.5" ry="1.5" fill="#7c3aed"/>
+              <path d="M13 26v-1.5a5 5 0 015-5h2a5 5 0 015 5V26" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </span>
+          <h2>NaveTrix Smart Connect</h2>
+        </div>
+        <button class="ai-chat-modal-close" id="aiChatModalClose" title="Close">&times;</button>
+        <form id="aiChatForm" novalidate>
+          <div class="form-group">
+            <label for="aiName">Name</label>
+            <input type="text" id="aiName" name="name" required maxlength="50" />
+            <span class="form-error" id="errName"></span>
+          </div>
+          <div class="form-group">
+            <label for="aiEmail">Email</label>
+            <input type="email" id="aiEmail" name="email" required maxlength="60" />
+            <span class="form-error" id="errEmail"></span>
+          </div>
+          <div class="form-group">
+            <label for="aiPhone">Phone</label>
+            <input type="tel" id="aiPhone" name="phone" pattern="[0-9\-\+ ]{7,20}" maxlength="20" required />
+            <span class="form-error" id="errPhone"></span>
+          </div>
+          <div class="form-group">
+            <label for="aiMsg">Message</label>
+            <textarea id="aiMsg" name="message" required maxlength="500" rows="4"></textarea>
+            <span class="form-error" id="errMsg"></span>
+          </div>
+          <button type="submit" class="ai-chat-submit-btn" style="width:100%;margin-top:1.2em;">Send Message</button>
+        </form>
+        <div id="aiChatSuccess" style="display:none;color:#25d366;font-weight:600;margin-top:1em;text-align:center;">Thank you! Your message has been sent.</div>
+      </div>
+    </div>
+    <style>
+      .floating-contact-box {
+        position: fixed;
+        z-index: 2000;
+        background: #fff;
+        border-radius: 18px;
+        box-shadow: 0 4px 24px rgba(47,111,206,0.13);
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.7em;
+        padding: 1.1em 1.3em;
+        min-width: 64px;
+        border: 2px solid #e3f0fa;
+      }
+      .floating-contact-right {
+        right: 24px;
+        bottom: 24px;
+      }
+      .floating-contact-left {
+        left: 24px;
+        bottom: 24px;
+      }
+      .floating-contact-link {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 48px;
+        height: 48px;
+        border-radius: 50%;
+        background: none;
+        transition: background 0.18s, box-shadow 0.18s, transform 0.18s;
+        box-shadow: 0 2px 8px rgba(47,111,206,0.08);
+        cursor: pointer;
+      }
+      .floating-contact-link:hover {
+        background: #f5f7fa;
+        box-shadow: 0 4px 16px rgba(47,111,206,0.13);
+        transform: scale(1.08);
+      }
+      .floating-contact-link svg { display: block; }
+      .bounce-icon {
+        animation: bounce 1.5s infinite;
+      }
+      .floating-contact-right .bounce-icon { animation-delay: 0s, 0.5s; }
+      .floating-contact-left .bounce-icon { animation-delay: 0.75s; }
+      @keyframes bounce {
+        0%, 100% { transform: translateY(0); }
+        20% { transform: translateY(-8px); }
+        40% { transform: translateY(0); }
+        60% { transform: translateY(-4px); }
+        80% { transform: translateY(0); }
+      }
+      @media (max-width: 600px) {
+        .floating-contact-right { right: 8px; bottom: 8px; padding: 0.7em 0.7em; min-width: 44px; }
+        .floating-contact-left { left: 8px; bottom: 8px; padding: 0.7em 0.7em; min-width: 44px; }
+        .floating-contact-link { width: 38px; height: 38px; }
+      }
+      body.dark-mode .floating-contact-box {
+        background: #232b3a;
+        border: 2px solid #2f6fce;
+        box-shadow: 0 4px 24px rgba(30,40,60,0.18);
+      }
+      /* AI Chat Modal Styles */
+      .ai-chat-modal {
+        position: fixed; z-index: 3000; left: 0; top: 0; width: 100vw; height: 100vh; display: flex; align-items: center; justify-content: center;
+      }
+      .ai-chat-modal-bg {
+        position: absolute; left: 0; top: 0; width: 100vw; height: 100vh; background: rgba(30,40,60,0.45); z-index: 1;
+      }
+      .ai-chat-modal-content {
+        position: relative; z-index: 2; background: #fff; border-radius: 22px; box-shadow: 0 12px 48px rgba(47,111,206,0.22); padding: 2.5em 2.2em 2em 2.2em; max-width: 410px; width: 95vw; min-width: 0; border: 1.5px solid #e3f0fa;
+        animation: aiModalPop 0.25s cubic-bezier(.4,1.6,.6,1) 1;
+      }
+      @keyframes aiModalPop { 0% { transform: scale(0.85); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
+      .ai-chat-modal-header {
+        display: flex; flex-direction: column; align-items: center; justify-content: center;
+        background: linear-gradient(90deg, #7c3aed 0%, #2f6fce 100%);
+        border-radius: 18px 18px 0 0;
+        margin: -2.5em -2.2em 2em -2.2em;
+        padding: 1.2em 0 1em 0;
+        box-shadow: 0 2px 12px rgba(124,51,237,0.10);
+      }
+      .ai-chat-modal-header h2 {
+        color: #fff; font-size: 1.35em; font-weight: 700; margin: 0.3em 0 0 0; letter-spacing: 0.01em;
+      }
+      .ai-chat-modal-icon { display: flex; align-items: center; justify-content: center; margin-bottom: 0.2em; }
+      .ai-chat-modal-close {
+        position: absolute; right: 1.1em; top: 1.1em; background: none; border: none; font-size: 2em; color: #7c3aed; cursor: pointer; z-index: 3;
+        transition: color 0.18s;
+      }
+      .ai-chat-modal-close:hover { color: #2f6fce; }
+      .form-group { margin-bottom: 1.2em; }
+      .form-group label { display: block; font-weight: 600; margin-bottom: 0.3em; color: #2f6fce; letter-spacing: 0.01em; }
+      .form-group input, .form-group textarea {
+        width: 100%; padding: 0.85em; border-radius: 10px; border: 1.5px solid #b3d1f7; font-size: 1em; font-family: inherit; background: #f8fbff; color: #222;
+        transition: border 0.2s, background 0.2s, box-shadow 0.2s;
+        box-shadow: 0 1px 4px rgba(47,111,206,0.06);
+      }
+      .form-group input:focus, .form-group textarea:focus {
+        border: 1.5px solid #7c3aed; background: #fff; outline: none; box-shadow: 0 2px 8px rgba(124,51,237,0.10);
+      }
+      .form-error { color: #e53935; font-size: 0.97em; min-height: 1.2em; display: block; margin-top: 0.2em; font-weight: 500; }
+      .ai-chat-submit-btn {
+        background: linear-gradient(90deg, #7c3aed 0%, #2f6fce 100%);
+        color: #fff; font-weight: 700; font-size: 1.08em; border: none; border-radius: 10px; padding: 0.9em 0; cursor: pointer;
+        box-shadow: 0 2px 8px rgba(47,111,206,0.10); transition: background 0.18s, box-shadow 0.18s;
+      }
+      .ai-chat-submit-btn:hover, .ai-chat-submit-btn:focus {
+        background: linear-gradient(90deg, #2f6fce 0%, #7c3aed 100%); box-shadow: 0 4px 16px rgba(124,51,237,0.13);
+      }
+      #aiChatSuccess { color: #25d366; font-weight: 700; font-size: 1.1em; }
+      body.dark-mode .floating-contact-box {
+        background: #232b3a;
+        border: 2px solid #2f6fce;
+        box-shadow: 0 4px 24px rgba(30,40,60,0.18);
+      }
+      body.dark-mode .ai-chat-modal-content { background: #232b3a; color: #e0e6ef; border: 1.5px solid #2f6fce; }
+      body.dark-mode .ai-chat-modal-header { background: linear-gradient(90deg, #a78bfa 0%, #2f6fce 100%); }
+      body.dark-mode .ai-chat-modal-header h2 { color: #fff; }
+      body.dark-mode .form-group input, body.dark-mode .form-group textarea { background: #181f2a; color: #e0e6ef; border: 1.5px solid #2f6fce; }
+      body.dark-mode .form-group input:focus, body.dark-mode .form-group textarea:focus { border: 1.5px solid #a78bfa; background: #232b3a; box-shadow: 0 2px 8px rgba(124,51,237,0.13); }
+      body.dark-mode .ai-chat-modal-close { color: #a78bfa; }
+      body.dark-mode .ai-chat-submit-btn { background: linear-gradient(90deg, #a78bfa 0%, #2f6fce 100%); color: #fff; }
+      body.dark-mode .ai-chat-submit-btn:hover, body.dark-mode .ai-chat-submit-btn:focus { background: linear-gradient(90deg, #2f6fce 0%, #a78bfa 100%); }
+    </style>
+    <script>
+      // Modal open/close logic
+      document.addEventListener('DOMContentLoaded', function() {
+        var aiBtn = document.getElementById('aiChatBtn');
+        var modal = document.getElementById('aiChatModal');
+        var closeBtn = document.getElementById('aiChatModalClose');
+        var bg = document.getElementById('aiChatModalBg');
+        aiBtn && aiBtn.addEventListener('click', function(e) { e.preventDefault(); modal.style.display = 'flex'; });
+        closeBtn && closeBtn.addEventListener('click', function() { modal.style.display = 'none'; });
+        bg && bg.addEventListener('click', function() { modal.style.display = 'none'; });
+        // Form validation
+        var form = document.getElementById('aiChatForm');
+        if(form) {
+          form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            var valid = true;
+            var name = form.name.value.trim();
+            var email = form.email.value.trim();
+            var phone = form.phone.value.trim();
+            var msg = form.message.value.trim();
+            // Name: at least 3 characters
+            if(!name) { valid = false; document.getElementById('errName').textContent = 'Name is required.'; }
+            else if(name.length < 3) { valid = false; document.getElementById('errName').textContent = 'Name must be at least 3 characters.'; }
+            else { document.getElementById('errName').textContent = ''; }
+            // Email: valid, not test/disposable, not too short
+            var emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            var testEmails = /^(test|admin|demo|fake|temp|sample)[^@]*@|@(mailinator|tempmail|10minutemail|guerrillamail|yopmail|dispostable|trashmail|fakeinbox|sharklasers)\./i;
+            if(!email) { valid = false; document.getElementById('errEmail').textContent = 'Email is required.'; }
+            else if(!emailPattern.test(email)) { valid = false; document.getElementById('errEmail').textContent = 'Invalid email.'; }
+            else if(email.length < 8) { valid = false; document.getElementById('errEmail').textContent = 'Email is too short.'; }
+            else if(testEmails.test(email)) { valid = false; document.getElementById('errEmail').textContent = 'Please use your real email.'; }
+            else { document.getElementById('errEmail').textContent = ''; }
+            // Phone: 10-15 digits, not all same digit
+            var phoneDigits = phone.replace(/\D/g, '');
+            var allSame = /^([0-9])\1{9,}$/.test(phoneDigits);
+            if(!phone) { valid = false; document.getElementById('errPhone').textContent = 'Phone is required.'; }
+            else if(phoneDigits.length < 10 || phoneDigits.length > 15) { valid = false; document.getElementById('errPhone').textContent = 'Phone must be 10-15 digits.'; }
+            else if(allSame) { valid = false; document.getElementById('errPhone').textContent = 'Phone number is invalid.'; }
+            else { document.getElementById('errPhone').textContent = ''; }
+            // Message: at least 10 characters, not all same char, not generic spam
+            var msgLower = msg.toLowerCase();
+            var allSameMsg = /^([a-zA-Z0-9])\1{9,}$/.test(msg);
+            var spammyMsg = /^(test|hello|hi|asdf|qwerty|message|sample|demo|1234567890)$/i.test(msgLower);
+            if(!msg) { valid = false; document.getElementById('errMsg').textContent = 'Message is required.'; }
+            else if(msg.length < 10) { valid = false; document.getElementById('errMsg').textContent = 'Message must be at least 10 characters.'; }
+            else if(allSameMsg) { valid = false; document.getElementById('errMsg').textContent = 'Message cannot be all the same character.'; }
+            else if(spammyMsg) { valid = false; document.getElementById('errMsg').textContent = 'Please enter a meaningful message.'; }
+            else { document.getElementById('errMsg').textContent = ''; }
+            if(valid) {
+              form.style.display = 'none';
+              document.getElementById('aiChatSuccess').style.display = 'block';
+              setTimeout(function(){
+                modal.style.display = 'none';
+                form.reset();
+                form.style.display = 'block';
+                document.getElementById('aiChatSuccess').style.display = 'none';
+              }, 2000);
+            }
+          });
+        }
+      });
+    </script>
 </body>
 </html>
