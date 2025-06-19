@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tech Docs</title>
+    <!-- Google Fonts: Roboto -->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <!-- Prism.js for code highlighting -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism.css">
+    <!-- Main CSS -->
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Top Navigation Bar -->
+    <nav class="navbar">
+        <div class="navbar-left">
+            <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/python/python-original.svg" alt="Logo" class="navbar-logo">
+            <button id="sidebarToggle" class="sidebar-toggle" title="Toggle sidebar" aria-label="Toggle sidebar">
+                <span class="material-icons">menu</span>
+            </button>
+        </div>
+        <div class="navbar-center">
+            <span class="site-title">Tech Docs</span>
+        </div>
+        <div class="navbar-right">
+            <form id="searchForm" class="navbar-search" autocomplete="off">
+                <input id="searchInput" type="text" placeholder="Search..." />
+                <button type="submit" class="search-btn" title="Search"><span class="material-icons">search</span></button>
+            </form>
+            <button id="darkModeToggle" title="Toggle dark mode" class="dark-toggle"><span id="darkModeIcon">🌙</span></button>
+        </div>
+    </nav>
+    <div class="sidebar-hover-hotspot"></div>
+    <!-- Horizontal Topics Menu -->
+    <nav class="topics-menu" id="topicsMenu"></nav>
+    <div class="sidebar-overlay" onclick="document.body.classList.remove('sidebar-open')"></div>
+    <div class="container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <nav id="sidebarMenu"></nav>
+        </aside>
+        <!-- Main Content -->
+        <main class="main-content">
+            <div id="content" class="content-card">
+                <h1>Welcome to Tech Docs</h1>
+                <p>Select a topic from the sidebar to get started.</p>
+            </div>
+        </main>
+        <!-- Right Sidebar for Ads/Promotions -->
+        <aside class="rightbar" id="rightbar"></aside>
+    </div>
+    <!-- Sticky Table of Contents (right sidebar) will be injected by JS -->
+    <!-- Prism.js and Marked.js -->
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/prism.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-javascript.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-python.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-sql.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-bash.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-json.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-css.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-markup.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-typescript.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-java.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-c.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-cpp.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <!-- Main JS (must be last) -->
+    <script src="main.js"></script>
+    <!-- Material Icons for search -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+</body>
+</html>

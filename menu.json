@@ -1,0 +1,4 @@
+{
+  "python": ["basics", "advanced"],
+  "azure": ["adf", "functions", "synapse"]
+}
