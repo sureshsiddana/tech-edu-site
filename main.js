@@ -106,9 +106,10 @@ async function loadSidebarFromMenuJson() {
                 const res = await fetch('https://raw.githubusercontent.com/sureshsiddana/techcontent/main/' + mdPath);
                 if (!res.ok) throw new Error(`HTTP ${res.status} - ${res.statusText}`);
                 const md = await res.text();
+                const normalizedMd = md.replace(/\r\n/g, '\n');
                 let html;
                 try {
-                    html = marked.parse(md);
+                    html = marked.parse(normalizedMd);
                 } catch (parseErr) {
                     let safeMd = typeof md === 'string' ? md : '';
                     safeMd = safeMd.replace(/[&<>"']/g, function(tag) {
@@ -185,6 +186,7 @@ function showSearchSuggestions(query) {
                 }
             });
             renderSidebarForSection(item.section);
+            attachSidebarLinkHandlers(); // Ensure sidebar links are clickable after search
             // Wait for sidebar to render, then highlight the correct sidebar link
             setTimeout(() => {
                 const sidebarMenu = document.getElementById('sidebarMenu');
@@ -207,55 +209,6 @@ function showSearchSuggestions(query) {
         dropdown.appendChild(el);
     });
     dropdown.style.display = 'block';
-}
-
-async function loadAndDisplayMarkdown(mdPath, section, isMobileNav) {
-    const sidebarMenu = document.getElementById('sidebarMenu');
-    if (sidebarMenu && !isMobileView()) {
-        sidebarMenu.querySelectorAll('.sidebar-link').forEach(l => {
-            l.classList.remove('active');
-            if (l.getAttribute('data-path') === mdPath) {
-                l.classList.add('active');
-            }
-        });
-    }
-    try {
-        const res = await fetch('https://raw.githubusercontent.com/sureshsiddana/techcontent/main/' + mdPath);
-        if (!res.ok) throw new Error('HTTP ' + res.status);
-        const md = await res.text();
-        const normalizedMd = md.replace(/\r\n/g, '\n');
-        let html;
-        try {
-            html = marked.parse(normalizedMd);
-        } catch (parseErr) {
-            let safeMd = typeof md === 'string' ? md : '';
-            safeMd = safeMd.replace(/[&<>"]'/g, function(tag) {
-                const charsToReplace = {
-                    '&': '&amp;',
-                    '<': '&lt;',
-                    '>': '&gt;',
-                    '"': '&quot;',
-                    "'": '&#39;'
-                };
-                return charsToReplace[tag] || tag;
-            });
-            html = `<pre>${safeMd}</pre>`;
-        }
-        if (typeof html !== 'string') html = String(html || '');
-        const contentDiv = document.getElementById('content');
-        if (contentDiv) {
-            contentDiv.innerHTML = html;
-            contentDiv.className = 'content-card';
-            setTimeout(() => { if (window.Prism) Prism.highlightAll(); }, 0);
-        }
-        if (typeof generateTOC === 'function') generateTOC();
-        // Add mobile nav if needed
-        if (isMobileView() && isMobileNav) {
-            renderMobileTopicNav();
-        }
-    } catch (err) {
-        document.getElementById('content').innerHTML = `<div style='color:red'>Failed to load <b>${mdPath}</b><br>${err.message}</div>`;
-    }
 }
 
 // --- Mobile topic navigation ---
@@ -354,9 +307,14 @@ function generateTOC() {
 document.getElementById('darkModeToggle').addEventListener('click', function() {
     document.body.classList.toggle('dark-mode');
     localStorage.setItem('darkMode', document.body.classList.contains('dark-mode'));
+    // Update icon
+    document.getElementById('darkModeIcon').textContent = document.body.classList.contains('dark-mode') ? '☀️' : '🌙';
 });
 if (localStorage.getItem('darkMode') === 'true') {
     document.body.classList.add('dark-mode');
+    document.getElementById('darkModeIcon').textContent = '☀️';
+} else {
+    document.getElementById('darkModeIcon').textContent = '🌙';
 }
 
 // --- Search Input Events ---
@@ -464,34 +422,10 @@ async function renderTopicsMenu() {
     }
 }
 
-// Render sidebar for a given section (desktop)
-function renderSidebarForSection(section) {
-    currentTopic = section;
+// Attach click event handlers to sidebar links (refactored for reuse)
+function attachSidebarLinkHandlers() {
     const sidebarMenu = document.getElementById('sidebarMenu');
-    if (!sidebarMenu || !menuDataCache) return;
-    const items = menuDataCache[section];
-    let html = '';
-    if (Array.isArray(items)) {
-        html += `<div class="sidebar-category">
-            <div class="sidebar-category-btn" style="font-weight:700;font-size:1.1em;cursor:default;">
-                <span>${capitalize(section)}</span>
-            </div>
-            <div class="sidebar-submenu" style="max-height:none;">
-                ${items.map(item => {
-                    let iconKey = (item.title || '').toLowerCase().split(' ')[0];
-                    const icon = fileIcons[iconKey] || fileIcons.default;
-                    return `<a href="#${section}-${item.title.replace(/\s+/g, '_')}" class="sidebar-link" data-section="${section}" data-title="${item.title}" data-path="${item.path}"><span class="sidebar-icon material-icons">${icon}</span>${item.title}</a>`;
-                }).join('')}
-            </div>
-        </div>`;
-    }
-    sidebarMenu.innerHTML = html;
-    // Remove topicClass from content card
-    const contentCard = document.getElementById('content');
-    if (contentCard) {
-        contentCard.className = 'content-card';
-    }
-    // Add click event listeners to sidebar links
+    if (!sidebarMenu) return;
     sidebarMenu.querySelectorAll('.sidebar-link').forEach(link => {
         link.addEventListener('click', async function(e) {
             sidebarMenu.querySelectorAll('.sidebar-link').forEach(l => l.classList.remove('active'));
@@ -528,21 +462,102 @@ function renderSidebarForSection(section) {
             }
         });
     });
-    // Display guide by default, or first file if no guide
-    if (Array.isArray(items) && items.length > 0) {
-        let guideItem = items.find(item => (item.title || '').toLowerCase() === 'guide');
-        if (!guideItem) guideItem = items[0];
-        if (guideItem) {
-            // Highlight the correct sidebar link
-            setTimeout(() => {
-                sidebarMenu.querySelectorAll('.sidebar-link').forEach(l => {
-                    l.classList.remove('active');
-                    if (l.getAttribute('data-path') === guideItem.path) {
-                        l.classList.add('active');
-                    }
-                });
-            }, 0);
-            loadAndDisplayMarkdown(guideItem.path, section);
-        }
+}
+
+// Update renderSidebarForSection to automatically load the first topic's content in the main area after rendering the sidebar, unless a specific topic is already selected. This ensures content always loads when a section is selected or after a search.
+function renderSidebarForSection(section, selectedPath = null) {
+    currentTopic = section;
+    const sidebarMenu = document.getElementById('sidebarMenu');
+    if (!sidebarMenu || !menuDataCache) return;
+    const items = menuDataCache[section];
+    let html = '';
+    if (Array.isArray(items)) {
+        html += `<div class="sidebar-category">
+            <div class="sidebar-category-btn" style="font-weight:700;font-size:1.1em;cursor:default;">
+                <span>${capitalize(section)}</span>
+            </div>
+            <div class="sidebar-submenu" style="max-height:none;">
+                ${items.map(item => {
+                    let iconKey = (item.title || '').toLowerCase().split(' ')[0];
+                    const icon = fileIcons[iconKey] || fileIcons.default;
+                    return `<a href=\"#${section}-${item.title.replace(/\s+/g, '_')}\" class=\"sidebar-link\" data-section=\"${section}\" data-title=\"${item.title}\" data-path=\"${item.path}\"><span class=\"sidebar-icon material-icons\">${icon}</span>${item.title}</a>`;
+                }).join('')}
+            </div>
+        </div>`;
     }
+    sidebarMenu.innerHTML = html;
+    // Remove topicClass from content card
+    const contentCard = document.getElementById('content');
+    if (contentCard) {
+        contentCard.className = 'content-card';
+    }
+    attachSidebarLinkHandlers();
+    // Auto-load first topic if not already selected
+    const sidebarLinks = sidebarMenu.querySelectorAll('.sidebar-link');
+    let toLoad = null;
+    if (selectedPath) {
+        // Try to find the link with the selectedPath
+        sidebarLinks.forEach(link => {
+            if (link.getAttribute('data-path') === selectedPath) {
+                link.classList.add('active');
+                toLoad = link.getAttribute('data-path');
+            }
+        });
+    }
+    if (!toLoad && sidebarLinks.length > 0) {
+        sidebarLinks[0].classList.add('active');
+        toLoad = sidebarLinks[0].getAttribute('data-path');
+    }
+    if (toLoad) {
+        loadAndDisplayMarkdown(toLoad, section);
+    }
+}
+
+// Utility to load and display markdown content
+function loadAndDisplayMarkdown(mdPath, section, skipSidebarHighlight = false) {
+    fetch('https://raw.githubusercontent.com/sureshsiddana/techcontent/main/' + mdPath)
+        .then(res => {
+            if (!res.ok) throw new Error(`HTTP ${res.status} - ${res.statusText}`);
+            return res.text();
+        })
+        .then(md => {
+            const normalizedMd = md.replace(/\r\n/g, '\n');
+            let html;
+            try {
+                html = marked.parse(normalizedMd);
+            } catch (parseErr) {
+                let safeMd = typeof md === 'string' ? md : '';
+                safeMd = safeMd.replace(/[&<>"]'/g, function(tag) {
+                    const charsToReplace = {
+                        '&': '&amp;',
+                        '<': '&lt;',
+                        '>': '&gt;',
+                        '"': '&quot;',
+                        "'": '&#39;'
+                    };
+                    return charsToReplace[tag] || tag;
+                });
+                html = `<pre>${safeMd}</pre>`;
+            }
+            if (typeof html !== 'string') html = String(html || '');
+            document.getElementById('content').innerHTML = html;
+            setTimeout(() => { if (window.Prism) Prism.highlightAll(); }, 0);
+            if (typeof generateTOC === 'function') generateTOC();
+            if (!skipSidebarHighlight) {
+                // Highlight the correct sidebar link
+                const sidebarMenu = document.getElementById('sidebarMenu');
+                if (sidebarMenu) {
+                    sidebarMenu.querySelectorAll('.sidebar-link').forEach(l => {
+                        if (l.getAttribute('data-path') === mdPath) {
+                            l.classList.add('active');
+                        } else {
+                            l.classList.remove('active');
+                        }
+                    });
+                }
+            }
+        })
+        .catch(err => {
+            document.getElementById('content').innerHTML = `<div style='color:red'>Failed to load <b>${mdPath}</b><br>${err.message}</div>`;
+        });
 }

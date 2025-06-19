@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tech Docs</title>
+    <title>NaveTrix Knowledge Hub</title>
     <!-- Google Fonts: Roboto -->
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
     <!-- Prism.js for code highlighting -->
@@ -15,20 +15,33 @@
     <!-- Top Navigation Bar -->
     <nav class="navbar">
         <div class="navbar-left">
-            <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/python/python-original.svg" alt="Logo" class="navbar-logo">
+            <span class="navbar-logo creative-logo" aria-label="TechDocs Logo">
+                <!-- Creative SVG logo -->
+                <svg width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <circle cx="18" cy="18" r="18" fill="#2f6fce"/>
+                  <path d="M10 26L18 8L26 26" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                  <circle cx="18" cy="22" r="2.5" fill="#ffe082"/>
+                </svg>
+            </span>
             <button id="sidebarToggle" class="sidebar-toggle" title="Toggle sidebar" aria-label="Toggle sidebar">
                 <span class="material-icons">menu</span>
             </button>
         </div>
         <div class="navbar-center">
-            <span class="site-title">Tech Docs</span>
+            <span class="site-title">NaveTrix Knowledge Hub</span>
         </div>
         <div class="navbar-right">
-            <form id="searchForm" class="navbar-search" autocomplete="off">
-                <input id="searchInput" type="text" placeholder="Search..." />
-                <button type="submit" class="search-btn" title="Search"><span class="material-icons">search</span></button>
+            <form id="searchForm" class="navbar-search enhanced-search" autocomplete="off">
+                <input id="searchInput" type="text" placeholder="Search topics, keywords..." />
+                <button type="submit" class="search-btn" title="Search">
+                  <span class="material-icons">search</span>
+                </button>
             </form>
-            <button id="darkModeToggle" title="Toggle dark mode" class="dark-toggle"><span id="darkModeIcon">🌙</span></button>
+            <button id="darkModeToggle" title="Toggle dark mode" class="dark-toggle enhanced-dark-toggle">
+              <span id="darkModeIcon">🌙</span>
+              <span class="dark-toggle-label">Dark Mode</span>
+            </button>
+            <a href="pages/contact-us.html" class="enhanced-dark-toggle" style="margin-left:0.7em;font-size:1em;background:#fff;color:#2f6fce;border:1.5px solid #b3d1f7;">Contact Us</a>
         </div>
     </nav>
     <div class="sidebar-hover-hotspot"></div>
@@ -48,7 +61,19 @@
             </div>
         </main>
         <!-- Right Sidebar for Ads/Promotions -->
-        <aside class="rightbar" id="rightbar"></aside>
+        <aside class="rightbar" id="rightbar">
+          <div class="student-info-box">
+            <h2>Student Success Tips</h2>
+            <ul>
+              <li>Take notes as you read and practice.</li>
+              <li>Try out code examples in your own editor.</li>
+              <li>Explore related topics for deeper understanding.</li>
+              <li>Use the search bar to quickly find content.</li>
+              <li>Ask questions and collaborate with peers.</li>
+            </ul>
+            <div class="student-tip">💡 <b>Tip:</b> Practice regularly to master new concepts!</div>
+          </div>
+        </aside>
     </div>
     <!-- Sticky Table of Contents (right sidebar) will be injected by JS -->
     <!-- Prism.js and Marked.js -->
